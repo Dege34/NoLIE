@@ -1,0 +1,25 @@
+# Global owners
+* @deepfake-forensics-team
+
+# Core team
+/deepfake_forensics/ @deepfake-forensics-team
+/configs/ @deepfake-forensics-team
+/scripts/ @deepfake-forensics-team
+/tests/ @deepfake-forensics-team
+
+# Documentation
+/README.md @deepfake-forensics-team
+/docs/ @deepfake-forensics-team
+
+# CI/CD
+/.github/ @deepfake-forensics-team
+
+# Docker
+/Dockerfile @deepfake-forensics-team
+/docker-compose.yml @deepfake-forensics-team
+/.dockerignore @deepfake-forensics-team
+
+# Configuration
+/pyproject.toml @deepfake-forensics-team
+/environment.yml @deepfake-forensics-team
+/Makefile @deepfake-forensics-team

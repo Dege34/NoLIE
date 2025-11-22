@@ -1,0 +1,162 @@
+# Default configuration for deepfake forensics
+# This is a minimal config for smoke testing
+
+# Data configuration
+data:
+  dataset_name: "synthetic"
+  data_dir: "data/processed"
+  batch_size: 8
+  num_workers: 2
+  image_size: 224
+  fps: 8
+  max_frames: 16
+  
+  # Dataset splits
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  
+  # Augmentation
+  augmentations:
+    enabled: true
+    color_jitter: 0.1
+    random_crop: true
+    horizontal_flip: 0.5
+    jpeg_quality: [70, 95]
+    blur_prob: 0.1
+    noise_prob: 0.1
+
+# Model configuration
+model:
+  name: "xception"  # Options: xception, vit, resnet_freq, audio_visual
+  pretrained: true
+  num_classes: 2
+  dropout: 0.5
+  
+  # Xception specific
+  xception:
+    input_channels: 3
+    num_classes: 2
+    
+  # ViT specific
+  vit:
+    model_name: "vit_tiny_patch16_224"
+    pretrained: true
+    num_classes: 2
+    
+  # ResNet with frequency branch
+  resnet_freq:
+    backbone: "resnet50"
+    pretrained: true
+    freq_features: 64
+    fusion_method: "concat"
+
+# Training configuration
+training:
+  max_epochs: 5  # Small for smoke test
+  learning_rate: 1e-4
+  weight_decay: 1e-4
+  warmup_epochs: 1
+  
+  # Loss configuration
+  loss:
+    name: "bce"  # Options: bce, focal, label_smoothing
+    focal_alpha: 0.25
+    focal_gamma: 2.0
+    label_smoothing: 0.1
+    
+  # Optimizer
+  optimizer:
+    name: "adamw"
+    lr: 1e-4
+    weight_decay: 1e-4
+    betas: [0.9, 0.999]
+    
+  # Scheduler
+  scheduler:
+    name: "cosine"
+    warmup_epochs: 1
+    min_lr: 1e-6
+    
+  # Mixed precision
+  precision: 16
+  gradient_clip_val: 1.0
+  
+  # Early stopping
+  early_stopping:
+    monitor: "val_auroc"
+    mode: "max"
+    patience: 3
+    min_delta: 0.001
+
+# Validation configuration
+validation:
+  val_check_interval: 1.0
+  check_val_every_n_epoch: 1
+  
+# Logging configuration
+logging:
+  log_every_n_steps: 10
+  val_check_interval: 1.0
+  
+  # Experiment tracking
+  experiment_tracker: "tensorboard"  # Options: tensorboard, mlflow, wandb, none
+  project_name: "deepfake-forensics"
+  run_name: "smoke-test"
+  
+  # Logging level
+  level: "INFO"
+
+# Reproducibility
+seed: 42
+deterministic: true
+benchmark: false
+
+# Hardware
+device: "auto"  # auto, cpu, cuda
+num_gpus: 1
+
+# Paths
+paths:
+  data_dir: "data"
+  output_dir: "outputs"
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  
+# Inference configuration
+inference:
+  batch_size: 1
+  confidence_threshold: 0.5
+  temporal_aggregation: "mean"  # Options: mean, attention, majority
+  save_heatmaps: true
+  save_frames: false
+  
+# API configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 1
+  log_level: "info"
+  
+# Explainability
+explain:
+  method: "gradcam"  # Options: gradcam, scorecam, integrated_gradients
+  target_layer: "auto"
+  save_heatmaps: true
+  colormap: "jet"
+  
+# Robustness testing
+robustness:
+  enabled: false
+  attacks:
+    - name: "fgsm"
+      epsilon: 0.01
+    - name: "pgd"
+      epsilon: 0.01
+      steps: 10
+  defenses:
+    - name: "tta"
+      num_augmentations: 8
+    - name: "frequency_filter"
+      high_pass: true
+      cutoff: 0.1

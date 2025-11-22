@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  deepfake-forensics:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./checkpoints:/app/checkpoints
+      - ./outputs:/app/outputs
+    environment:
+      - PYTHONPATH=/app
+    command: ["python", "-m", "deepfake_forensics.cli", "serve", "--host", "0.0.0.0", "--port", "8000"]
+
+  mlflow:
+    image: python:3.11-slim
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlruns
+    command: ["pip", "install", "mlflow", "&&", "mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlruns/mlflow.db", "--default-artifact-root", "/mlruns"]

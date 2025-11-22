@@ -1,0 +1,98 @@
+# Small training configuration for quick experiments
+# Based on default.yaml with modifications for faster training
+
+# Data configuration
+data:
+  dataset_name: "synthetic"
+  data_dir: "data/processed"
+  batch_size: 16
+  num_workers: 4
+  image_size: 224
+  fps: 8
+  max_frames: 8  # Reduced for faster training
+  
+  # Dataset splits
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  
+  # Augmentation
+  augmentations:
+    enabled: true
+    color_jitter: 0.2
+    random_crop: true
+    horizontal_flip: 0.5
+    jpeg_quality: [60, 95]
+    blur_prob: 0.2
+    noise_prob: 0.2
+
+# Model configuration
+model:
+  name: "xception"
+  pretrained: true
+  num_classes: 2
+  dropout: 0.3
+
+# Training configuration
+training:
+  max_epochs: 10
+  learning_rate: 2e-4
+  weight_decay: 1e-4
+  warmup_epochs: 2
+  
+  # Loss configuration
+  loss:
+    name: "focal"
+    focal_alpha: 0.25
+    focal_gamma: 2.0
+    
+  # Optimizer
+  optimizer:
+    name: "adamw"
+    lr: 2e-4
+    weight_decay: 1e-4
+    
+  # Scheduler
+  scheduler:
+    name: "cosine"
+    warmup_epochs: 2
+    min_lr: 1e-6
+    
+  # Mixed precision
+  precision: 16
+  gradient_clip_val: 1.0
+  
+  # Early stopping
+  early_stopping:
+    monitor: "val_auroc"
+    mode: "max"
+    patience: 5
+    min_delta: 0.001
+
+# Validation configuration
+validation:
+  val_check_interval: 0.5
+  check_val_every_n_epoch: 1
+
+# Logging configuration
+logging:
+  log_every_n_steps: 5
+  experiment_tracker: "tensorboard"
+  project_name: "deepfake-forensics"
+  run_name: "small-training"
+
+# Reproducibility
+seed: 42
+deterministic: true
+benchmark: false
+
+# Hardware
+device: "auto"
+num_gpus: 1
+
+# Paths
+paths:
+  data_dir: "data"
+  output_dir: "outputs"
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"

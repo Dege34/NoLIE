@@ -1,0 +1,113 @@
+# Inference configuration
+# Optimized for inference and evaluation
+
+# Model configuration
+model:
+  name: "xception"
+  checkpoint_path: "checkpoints/best.ckpt"
+  device: "auto"
+  
+# Data configuration
+data:
+  batch_size: 1
+  num_workers: 2
+  image_size: 224
+  fps: 8
+  max_frames: 32
+
+# Inference settings
+inference:
+  batch_size: 1
+  confidence_threshold: 0.5
+  temporal_aggregation: "attention"  # Options: mean, attention, majority
+  save_heatmaps: true
+  save_frames: true
+  save_metadata: true
+  
+  # Output configuration
+  output_dir: "outputs/inference"
+  save_format: "json"  # Options: json, csv, both
+  
+  # Video processing
+  video:
+    extract_frames: true
+    frame_interval: 1
+    max_frames: 100
+    
+  # Audio-visual consistency
+  av_consistency:
+    enabled: false
+    lip_sync_threshold: 0.3
+    audio_features: "mfcc"
+
+# Explainability
+explain:
+  method: "gradcam"
+  target_layer: "auto"
+  save_heatmaps: true
+  colormap: "jet"
+  alpha: 0.4
+  
+  # Heatmap settings
+  heatmap:
+    save_individual: true
+    save_overlay: true
+    overlay_alpha: 0.4
+    colormap: "jet"
+    
+  # Attribution settings
+  attribution:
+    method: "integrated_gradients"
+    steps: 50
+    baseline: "zeros"
+
+# Robustness testing
+robustness:
+  enabled: false
+  test_attacks: false
+  test_defenses: false
+  
+  # Attack configurations
+  attacks:
+    - name: "fgsm"
+      epsilon: 0.01
+    - name: "pgd"
+      epsilon: 0.01
+      steps: 10
+    - name: "carlini_wagner"
+      confidence: 0.0
+      learning_rate: 0.01
+      max_iterations: 1000
+      
+  # Defense configurations
+  defenses:
+    - name: "tta"
+      num_augmentations: 8
+      augmentation_strength: 0.1
+    - name: "frequency_filter"
+      high_pass: true
+      cutoff: 0.1
+    - name: "jpeg_compression"
+      quality: 85
+
+# API configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 1
+  log_level: "info"
+  max_file_size: 100  # MB
+  allowed_extensions: [".jpg", ".jpeg", ".png", ".mp4", ".avi", ".mov"]
+  
+# Logging
+logging:
+  level: "INFO"
+  log_predictions: true
+  log_confidence_scores: true
+  
+# Paths
+paths:
+  data_dir: "data"
+  output_dir: "outputs"
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
