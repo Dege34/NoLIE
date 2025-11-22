@@ -1,4 +1,4 @@
-# Deepfake Forensics
+# NoLIE
 
 A production-grade deepfake detection system with comprehensive explainability and robustness features.
 
@@ -35,8 +35,8 @@ python start.py
 
 ```bash
 # Clone the repository
-git clone https://github.com/deepfake-forensics/deepfake-forensics.git
-cd deepfake-forensics
+git clone https://github.com/Dege34/NoLIE.git
+cd NoLIE
 
 # Install Python dependencies
 pip install -e .
@@ -50,8 +50,8 @@ python start.py
 
 ### Access the Application
 
-- **Web UI**: http://localhost:5173
-- **API**: http://localhost:8000
+- **Web UI**: http://localhost:
+- **API**: http://localhost:
 - **Documentation**: See [GETTING_STARTED.md](GETTING_STARTED.md)
 
 ### Basic Usage
